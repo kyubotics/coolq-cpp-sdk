@@ -14,7 +14,7 @@
 
 `cqp.h` 中的函数声明一般通过查看官方的易语言 SDK 来转译成 C，也可以通过 `dumpbin /exports CQP.dll` 来直接查看 dll 中的导出函数。注意从后者没法看到参数列表。
 
-要自己生成 `.lib` 文件，首先需要打开一个 `Visual Studio Developer Command Prompt`，VS 2015、VC++ 2010 等都带了这个程序。
+要自己生成 `.lib` 文件，首先需要打开一个「Visual Studio Developer Command Prompt」，VS 2015、VC++ 2010 等都带了这个程序。
 
 然后在这个命令行中运行（注意需要 Python 3.x）：
 
