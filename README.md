@@ -1,4 +1,4 @@
-# CoolQ C++ SDK (第三方)
+# CoolQ C++ SDK (3rd-party)
 
 酷 Q 官方的 C++ SDK 看起来没人维护了，[CoolQ/cqsdk-vc](https://github.com/CoolQ/cqsdk-vc) 上面的 `CQP.lib` 和 `cqp.h` 都已经过时了，有些新的函数接口没有加进去，所以新开此 repo 来维护一个第三方的版本。
 
@@ -9,6 +9,8 @@
 在插件中调用的接口，需要在 `.json` 文件中的 `auth` 字段加上相应的权限码，具体权限码对应的函数，见 [权限码](PermissionCode.md)。
 
 ## 手动生成 `.lib` 文件
+
+注：如果你不明白这里在干什么，就不要自己生成了。如果发现酷 Q 更新了新的接口而这里的 `cqp.h` 中还没有，那就请提交 [issue](https://github.com/richardchien/coolq-cpp-sdk/issues/new)。
 
 [`scripts`](scripts) 目录中的 `generate_lib.py` 是用来从 `.h` 文件生成 `.lib` 文件的，它会解析头文件中的 `CQAPI` 函数声明，来生成 `CQP.lib`，从而不用再担心官方 SDK 或我这里的没有及时更新）。
 
