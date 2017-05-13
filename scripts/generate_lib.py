@@ -89,7 +89,7 @@ def which(file):
 def main():
     """Command Line Portal"""
     if len(sys.argv) < 2:
-        print('Usage: python generate_lib.py <coolq-header-file-path>')
+        print('Usage: python generate_lib.py C:\\path\\to\\cqp.h')
         return
     if which('lib.exe') is None:
         print('Please run this script in a "VS Developer Command Prompt".')
