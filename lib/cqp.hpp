@@ -82,8 +82,20 @@ public:
         return CQ_setGroupAddRequestV2(this->_ac, response_flag, request_type, response_operation, reason);
     }
 
+    int64_t getLoginQQ() {
+        return CQ_getLoginQQ(this->_ac);
+    }
+
+    const char *getLoginNick() {
+        return CQ_getLoginNick(this->_ac);
+    }
+
     const char *getStrangerInfo(int64_t qq, cq_bool_t no_cache) {
         return CQ_getStrangerInfo(this->_ac, qq, no_cache);
+    }
+
+    const char *getGroupList() {
+        return CQ_getGroupList(this->_ac);
     }
 
     const char *getGroupMemberList(int64_t group_id) {
@@ -92,6 +104,18 @@ public:
 
     const char *getGroupMemberInfoV2(int64_t group_id, int64_t qq, cq_bool_t no_cache) {
         return CQ_getGroupMemberInfoV2(this->_ac, group_id, qq, no_cache);
+    }
+
+    const char *getCookies() {
+        return CQ_getCookies(this->_ac);
+    }
+
+    int32_t getCsrfToken() {
+        return CQ_getCsrfToken(this->_ac);
+    }
+
+    const char *getAppDirectory() {
+        return CQ_getAppDirectory(this->_ac);
     }
 
     const char *getRecord(const char *file, const char *out_format) {
@@ -104,6 +128,10 @@ public:
 
     int32_t setFatal(const char *error_info) {
         return CQ_setFatal(this->_ac, error_info);
+    }
+
+    int32_t setRestart() {
+        return CQ_setRestart(this->_ac);
     }
 
 private:
