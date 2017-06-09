@@ -23,4 +23,5 @@
 | 150   | `setFriendAddRequest` | 置好友添加请求 |
 | 151   | `setGroupAddRequest` | 置群添加请求 |
 | 160   | `getGroupMemberList` | 获取群成员列表 |
+| 161   | `getGroupList` | 获取群列表 |
 | 170   | `setRestart` | 重启酷Q（似乎无法使用） |
