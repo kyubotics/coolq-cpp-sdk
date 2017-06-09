@@ -42,16 +42,22 @@ def main():
 
     for func_match in re.finditer(r'CQAPI\s*\((?P<return>.*?)\)\s*'
                                   r'(?P<name>[_A-Za-z0-9]+)'
-                                  r'\(int32_t\s*.*?,\s*(?P<params>.*?)\);', content):
-        kwargs = func_match.groupdict()
+                                  r'\(int32_t\s+.*?(,\s*(?P<params>.*?))?\);', content):
+        kwargs = dict(func_match.groupdict())
+        if kwargs['params'] is None:
+            kwargs['params'] = ''
         kwargs['oo_name'] = kwargs['name'].split('_')[-1]
-        kwargs['param_names'] = ', '.join(
-            [re.match(r'^.*?([_A-Za-z0-9]+)\s*$', x).group(1)
-             for x in kwargs['params'].split(',')]
-        )
+        print(kwargs['oo_name'])
+        if kwargs['params']:
+            kwargs['param_names'] = ', ' + ', '.join(
+                [re.match(r'^.*?([_A-Za-z0-9]+)\s*$', x).group(1)
+                 for x in kwargs['params'].split(',')]
+            )
+        else:
+            kwargs['param_names'] = ''
         kwargs['space1'] = '' if kwargs['return'].endswith('*') else ' '
         functions += ('    {return}{space1}{oo_name}({params}) {{\n'
-                      '        return {name}(this->_ac, {param_names});\n'
+                      '        return {name}(this->_ac{param_names});\n'
                       '    }}\n\n').format(**kwargs)
 
     with open('cqp.hpp', 'w', encoding='utf-8') as hpp_f:
