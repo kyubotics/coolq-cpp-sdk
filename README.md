@@ -1,39 +1,87 @@
-# CoolQ C++ SDK (3rd-party)
+# CoolQ C++ SDK（第三方）
 
-酷 Q 官方的 C++ SDK 看起来没人维护了，[CoolQ/cqsdk-vc](https://github.com/CoolQ/cqsdk-vc) 上面的 `CQP.lib` 和 `cqp.h` 都已经过时了，有些新的函数接口没有加进去，所以新开此 repo 来维护一个第三方的版本。
+CoolQ C++ SDK 封装了跟 DLL 接口相关的底层逻辑，包括：
 
-[`lib`](lib) 目录中的 `CQP.lib` 和 `cqp.h` 是我生成好的最新版本的库文件和头文件，可以直接添加到酷 Q 插件的工程中，和官方的使用方法一样（只要直接替换官方的 demo 里的同名文件即可）。此 `.lib` 文件没有实际的函数实现，只是用来通过链接的，实际的函数实现在酷 Q 安装目录的 `bin\CQP.dll`。
+- 将所有从酷 Q 传来的字符串转成 UTF-8，并将所有传入酷 Q 的字符串转成 GB18030
+- 封装了 `Message` 和 `MessageSegment` 类，使构造消息内容更为方便
+- `MessageSegment` 类提供了快速构造消息段（CQ 码）的静态函数
+- 处理了消息内容中的 emoji 到 Unicode 的转换
+- 封装了酷 Q 事件的数据，在事件处理函数中传入
+- 将 QQ 相关的事件分为三个大类别：`MessageEvent`、`NoticeEvent`、`RequestEvent`
+- 封装了数据类，如 `User`、`Group`、`GroupMember` 等
+- ……
 
-另外，在使用 C++ 面向对象编写插件时，使用对象而不是纯 C 函数会使开发效率更高，因此 [`lib`](lib) 目录中还提供了一个面向对象封装 [`cqp.hpp`](lib/cqp.hpp) 以便于使用。
+并且对外提供了更现代的 C++ 接口从而为更方便地编写插件提供可能。
 
-## 接口权限码
+## 使用方式
 
-在插件中调用的接口，需要在 `.json` 文件中的 `auth` 字段加上相应的权限码，具体权限码对应的函数，见 [权限码](PermissionCode.md)。
+项目使用 CMake 构建（可以直接用 VSCode 或 VS 打开），[`scripts/generate.ps1`](scripts/generate.ps1)、[`scripts/build.ps1`](scripts/build.ps1)、[`scripts/post_build.ps1`](scripts/post_build.ps1) 分别给出了生成、构建、安装的脚本，你可能需要对它们中的一些变量做适当修改以在你的系统中运行。
 
-## 手动生成 `.lib` 文件
+除了 [`com.example.demo.json`](com.example.demo.json) 文件为 GB18030 编码，其它代码文件均为 UTF-8 编码，且编译选项中使用了 `/utf-8`，你后续添加的所有代码文件都需要使用 UTF-8 编码。
 
-注：如果你不明白这里在干什么，就不要自己生成了。如果发现酷 Q 更新了新的接口而这里的 `cqp.h` 中还没有，那就请提交 [issue](https://github.com/richardchien/coolq-cpp-sdk/issues/new)。
+项目的依赖项通过 [vcpkg](https://github.com/Microsoft/vcpkg) 管理，如果你没有使用过它，请先前往它的官方 repo 了解一下使用方法。
 
-[`scripts`](scripts) 目录中的 `generate_lib.py` 是用来从 `.h` 文件生成 `.lib` 文件的，它会解析头文件中的 `CQAPI` 函数声明，来生成 `CQP.lib`，从而不用再担心官方 SDK 或我这里的没有及时更新）。
+Vcpkg 使用如下 triplet：
 
-`cqp.h` 中的函数声明一般通过查看官方的易语言 SDK 来转译成 C，也可以通过 `dumpbin /exports CQP.dll` 来直接查看 dll 中的导出函数。注意从后者没法看到参数列表。
-
-要自己生成 `.lib` 文件，首先需要打开一个「Visual Studio Developer Command Prompt」，VS 2015、VC++ 2010 等都带了这个程序。
-
-然后在这个命令行中运行（注意需要 Python 3.x）：
-
-```bat
-python .\scripts\generate_lib.py .\cqp.h
+```cmake
+set(VCPKG_TARGET_ARCHITECTURE x86)
+set(VCPKG_CRT_LINKAGE static)
+set(VCPKG_LIBRARY_LINKAGE static)
+set(VCPKG_PLATFORM_TOOLSET v141)
 ```
 
-此命令会在当前工作目录下生成 `CQP.lib` 文件。
+创建了这个 triplet 之后（建议命名为 `x86-windows-static`），你需要将 [`scripts/generate.ps1`](scripts/generate.ps1) 中的 `$vcpkg_root` 和 `$vcpkg_triplet` 设置成你系统中的相应值。
 
-## 手动生成 `.hpp` 文件
+除此之外，还需要安装如下依赖（使用上面的 triplet）：
 
-[`scripts`](scripts) 目录中的 `generate_hpp.py` 是用来从 `.h` 文件生成 `.hpp` 文件的，它会解析函数 `CQAPI` 函数的返回类型、参数、函数名等信息，然后包装成 C++ 类的形式，如果这里的 `cqp.hpp` 文件没有及时更新，你可以手动生成：
+| 模块 | 依赖项 |
+| --- | ----- |
+| `cqsdk` | `boost-algorithm`<br>`boost-filesystem`<br>`libiconv` |
 
-```bat
-python .\scripts\generate_hpp.py .\cqp.h
+上述依赖项中的 `boost-filesystem` 只在获取插件目录相关接口中使用（具体在 [`dir.cpp`](src/cqsdk/dir.cpp)），如果你不需要使用这个功能，可以不安装，并直接删除 `dir.h` 和 `dir.cpp` 以及 `cqsdk.h` 中引入它的代码。
+
+此外，由于代码使用了某些 C++17 的特性，所以需要安装 `v141` 工具集才可以编译。
+
+接口的具体文档暂时就不写了，顺着 [`cqsdk.h`](src/cqsdk/cqsdk.h) 头文件找进去或者查看示例代码 [`demo.cpp`](src/demo.cpp) 基本就可以看明白。
+
+请注意你在编写自己的插件时请确保你的 JSON 描述文件和 [`com.example.demo.json`](com.example.demo.json) 文件的 `event` 中的 `function` 字段完全一致，因为 DLL 导出函数名已经在 [`app.cpp`](src/cqsdk/app.cpp) 和 [`event.cpp`](src/cqsdk/event.cpp) 写死了。
+
+## 插件生命周期
+
 ```
++-----------------------------------------+
+|             Enabled At Start            |
++-----------------------------------------+
+| on_initialize                           |
+|       +                                 |
+|       |                                 |
+|       v                                 |
+| on_coolq_start                          |
+|       +                                 |
+|       |                                 |
+|       v     disabled by user            |
+|   on_enable +--------------> on_disable |
+|       +                           +     |
+|       |                           |     |
+|       v                           |     |
+| on_coolq_exit <-------------------+     |
++-----------------------------------------+
 
-此命令会在当前工作目录下生成 `cqp.hpp` 文件。
++---------------------------------------+
+|            Disabled At Start          |
++---------------------------------------+
+| on_initialize +------+                |
+|       +              |enabled by user |
+|       |              |                |
+|       |              v                |
+|       |       on_coolq_start          |
+|       |              +                |
+|       |              |                |
+|       |              v                |
+|       |          on_enable            |
+|       |              +                |
+|       |              |                |
+|       v              |                |
+| on_coolq_exit <------+                |
++---------------------------------------+
+```
