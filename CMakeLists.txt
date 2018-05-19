@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.9)
 project(coolq-cpp-sdk)
 
 set(CMAKE_CXX_STANDARD 17)
-add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+set(CMAKE_CXX_FLAGS "/utf-8 ${CMAKE_CXX_FLAGS}")  # use UTF-8 source files
+set(CMAKE_CXX_FLAGS "/MP ${CMAKE_CXX_FLAGS}")  # build with object level parallelism
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
@@ -15,6 +16,7 @@ include_directories(src)
 add_definitions(-DBOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE
                 -D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
                 -D_SCL_SECURE_NO_WARNINGS
+                -D_WIN32_WINNT=0x0501
                 -DWIN32_LEAN_AND_MEAN)
 
 find_package(Boost REQUIRED COMPONENTS filesystem)
