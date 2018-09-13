@@ -13,7 +13,7 @@ CQ_INITIALIZE("com.example.demo");
 CQ_MAIN {
     cq::config.convert_unicode_emoji = true; // 配置 SDK 自动转换 Emoji 到 Unicode（默认就是 true）
 
-    app::on_enable = []() {
+    app::on_enable = [] {
         // logging、api、dir 等命名空间下的函数只能在事件回调函数内部调用，而不能直接在 CQ_MAIN 中调用
         logging::debug(u8"启用", u8"插件已启动");
     };

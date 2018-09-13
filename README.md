@@ -1,5 +1,7 @@
 # CoolQ C++ SDK（第三方）
 
+[![License](https://img.shields.io/github/license/richardchien/coolq-cpp-sdk.svg)](LICENSE)
+
 CoolQ C++ SDK 封装了跟 DLL 接口相关的底层逻辑，包括：
 
 - 将所有从酷 Q 传来的字符串转成 UTF-8，并将所有传入酷 Q 的字符串转成 GB18030
@@ -15,32 +17,52 @@ CoolQ C++ SDK 封装了跟 DLL 接口相关的底层逻辑，包括：
 
 ## 使用方式
 
-项目使用 CMake 构建（可以直接用 VS Code 或 VS 打开），[`scripts/generate.ps1`](scripts/generate.ps1)、[`scripts/build.ps1`](scripts/build.ps1)、[`scripts/post_build.ps1`](scripts/post_build.ps1) 分别给出了生成、构建、安装的脚本，你可能需要对它们中的一些变量做适当修改以在你的系统中运行。
+本项目使用 [CMake](https://cmake.org/) 构建，依赖项通过 [Vcpkg](https://github.com/Microsoft/vcpkg) 管理。如果你没有使用过这两个工具，请先前往它们的官方网站了解基本用法。
 
-除了 [`com.example.demo.json`](com.example.demo.json) 文件为 GB18030 编码，其它代码文件均为 UTF-8 编码，且编译选项中使用了 `/utf-8`，你后续添加的所有代码文件都需要使用 UTF-8 编码。
-
-项目的依赖项通过 [vcpkg](https://github.com/Microsoft/vcpkg) 管理，如果你没有使用过它，请先前往它的官方 repo 了解一下使用方法。
+可以直接用 VS Code 或 VS 打开项目，项目中的所有代码文件全部使用 UTF-8 编码，你后续添加的所有代码文件都需要使用 UTF-8 编码。**注意，如果你使用 VS，则它默认使用 ANSI 编码保存文件，需要手动修改为 UTF-8**。[`com.example.demo.json`](com.example.demo.json) 文件将在 [`scripts/post_build.ps1`](scripts/post_build.ps1) 脚本中被转换为酷 Q 要求的 GB18030 编码。
 
 Vcpkg 使用如下 triplet：
 
 ```cmake
 set(VCPKG_TARGET_ARCHITECTURE x86)
-set(VCPKG_CRT_LINKAGE static)
+set(VCPKG_CRT_LINKAGE dynamic)
 set(VCPKG_LIBRARY_LINKAGE static)
 set(VCPKG_PLATFORM_TOOLSET v141)
 ```
 
-创建了这个 triplet 之后（建议命名为 `x86-windows-static`），你需要将 [`scripts/generate.ps1`](scripts/generate.ps1) 中的 `$vcpkg_root` 和 `$vcpkg_triplet` 设置成你系统中的相应值。
+你需要在 Vcpkg 的 `triplets` 文件夹中创建一个名为 `***.cmake` 的文件（文件名随意，这里假设为 `my-triplet.cmake`），内容如上。创建了这个 triplet 之后，你需要将 [`scripts/generate.ps1`](scripts/generate.ps1) 中的 `$vcpkg_root`（vcpkg 根目录）和 `$vcpkg_triplet`（triplet 名称，例如 `my-triplet`）设置成你系统中的相应值（或设置环境变量），如果你使用 VS Code 或 VS 编辑项目，可以直接修改 `.vscode/tasks.json`（VS Code）或 `CMakeSettings.json`（VS）中的 `VCPKG_ROOT` 和 `VCPKG_TRIPLET` 环境变量。
 
 除此之外，还需要安装如下依赖（使用上面的 triplet）：
 
 | 模块 | 依赖项 |
 | --- | ----- |
-| `cqsdk` | `boost-algorithm`<br>`boost-filesystem`<br>`libiconv` |
+| `cqsdk` | `boost-algorithm`<br>`libiconv` |
 
-上述依赖项中的 `boost-filesystem` 只在获取插件目录相关接口中使用（具体在 [`dir.cpp`](src/cqsdk/dir.cpp)），如果你不需要使用这个功能，可以不安装，并直接删除 `dir.h` 和 `dir.cpp` 以及 `cqsdk.h` 中引入它的代码。
+安装命令如下：
 
-此外，由于代码使用了某些 C++17 的特性，所以需要安装 `v141` 工具集才可以编译。
+```ps1
+cd vcpkg
+.\vcpkg --vcpkg-root . --triplet my-triplet install boost-algorithm libiconv
+```
+
+构建成功后，可以在 `build/Debug/Debug` 或 `build/Release/Release` 中找到生成的 DLL 和 JSON 文件，直接拷贝到酷 Q 的 `app` 目录即可测试使用（酷 Q 需要开启开发模式）。
+
+如果不想每次构建都手动拷贝这两个文件，可以在 `scripts` 目录添加文件 `install.ps1`（会被 `post_build.ps1` 在构建成功之后自动执行）如下：
+
+```ps1
+$lib_name = $args[0]
+$out_dir = $args[1]
+
+$dll_name = "${lib_name}.dll"
+$dll_path = "${out_dir}\${dll_name}"
+$json_name = "${lib_name}.json"
+$json_path = "${out_dir}\${json_name}"
+
+Copy-Item -Force $dll_path "C:\Applications\CQA\app\${dll_name}"
+Copy-Item -Force $json_path "C:\Applications\CQA\app\${json_name}"
+```
+
+注意上面脚本中需要适当修改酷 Q 的路径。
 
 接口的具体文档暂时就不写了，顺着 [`cqsdk.h`](src/cqsdk/cqsdk.h) 头文件找进去或者查看示例代码 [`demo.cpp`](src/demo.cpp) 基本就可以看明白。
 

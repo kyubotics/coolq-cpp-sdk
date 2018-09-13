@@ -5,114 +5,114 @@
     "version": "1.0.0",
     "version_id": 1,
     "author": "Your Name",
-    "description": "���� CoolQ C++ SDK ��һ�� Demo��",
+    "description": "这是 CoolQ C++ SDK 的一个 Demo。",
     "event": [
         {
             "id": 1003,
             "type": 1003,
-            "name": "App Enable",
+            "name": "插件启用",
             "priority": 20000,
             "function": "cq_app_enable"
         },
         {
             "id": 1004,
             "type": 1004,
-            "name": "App Disable",
+            "name": "插件停用",
             "priority": 20000,
             "function": "cq_app_disable"
         },
         {
             "id": 1001,
             "type": 1001,
-            "name": "CoolQ Start",
+            "name": "酷Q启动",
             "priority": 20000,
             "function": "cq_coolq_start"
         },
         {
             "id": 1002,
             "type": 1002,
-            "name": "CoolQ Exit",
+            "name": "酷Q退出",
             "priority": 20000,
             "function": "cq_coolq_exit"
         },
         {
             "id": 1,
             "type": 21,
-            "name": "Private Message",
+            "name": "私聊消息",
             "function": "cq_event_private_msg",
             "priority": 20000
         },
         {
             "id": 2,
             "type": 2,
-            "name": "Group Message",
+            "name": "群消息",
             "function": "cq_event_group_msg",
             "priority": 20000
         },
         {
             "id": 3,
             "type": 4,
-            "name": "Discuss Message",
+            "name": "讨论组消息",
             "function": "cq_event_discuss_msg",
             "priority": 20000
         },
         {
             "id": 4,
             "type": 11,
-            "name": "Group Upload",
+            "name": "群文件上传",
             "function": "cq_event_group_upload",
             "priority": 20000
         },
         {
             "id": 5,
             "type": 101,
-            "name": "Group Admin",
+            "name": "群管理员变动",
             "function": "cq_event_group_admin",
             "priority": 20000
         },
         {
             "id": 6,
             "type": 102,
-            "name": "Group Decrease",
+            "name": "群成员减少",
             "function": "cq_event_group_member_decrease",
             "priority": 20000
         },
         {
             "id": 7,
             "type": 103,
-            "name": "Group Increase",
+            "name": "群成员增加",
             "function": "cq_event_group_member_increase",
             "priority": 20000
         },
         {
             "id": 10,
             "type": 201,
-            "name": "Friend Add",
+            "name": "好友添加",
             "function": "cq_event_friend_add",
             "priority": 20000
         },
         {
             "id": 8,
             "type": 301,
-            "name": "Add Friend Request",
+            "name": "加好友请求",
             "function": "cq_event_add_friend_request",
             "priority": 20000
         },
         {
             "id": 9,
             "type": 302,
-            "name": "Add Group Request",
+            "name": "加群请求／邀请",
             "function": "cq_event_add_group_request",
             "priority": 20000
         }
     ],
     "menu": [
         {
-            "name": "�˵� 1",
+            "name": "菜单 1",
             "function": "menu_demo_1"
         },
         {
-            "name": "�˵� 2",
+            "name": "菜单 2",
             "function": "menu_demo_2"
         }
     ],
