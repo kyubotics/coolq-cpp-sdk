@@ -1,3 +1,4 @@
 [submodule "src/cqsdk"]
 	path = src/cqsdk
 	url = git@github.com:richardchien/coolq-cpp-sdk-core.git
+	branch = master
