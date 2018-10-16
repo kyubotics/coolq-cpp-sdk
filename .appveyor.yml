@@ -10,9 +10,9 @@ platform:
 
 environment:
   VCPKG_ROOT: C:\tools\vcpkg
-  VCPKG_TRIPLET: my-triplet
+  VCPKG_TRIPLET: my-x86-windows-static
 
-cache: c:\tools\vcpkg\installed\  # cache the installed vcpkg packages
+cache: c:\tools\vcpkg\installed\ -> .appveyor.yml  # cache the installed vcpkg packages
 
 install:
   - echo set(VCPKG_TARGET_ARCHITECTURE x86) > %VCPKG_ROOT%\triplets\%VCPKG_TRIPLET%.cmake
