@@ -9,6 +9,11 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 include(FindVcpkgIncludeDir)
 
+if(CMAKE_BUILD_TYPE MATCHES "^Debug$")
+    # fix Vcpkg debug library lookup bug, see https://github.com/Microsoft/vcpkg/issues/1626
+    list(APPEND CMAKE_IGNORE_PATH ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib)
+endif()
+
 include_directories(${VCPKG_INCLUDE_DIR})
 include_directories(src)
 
@@ -18,6 +23,8 @@ add_definitions(-DBOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE
 				-DNOMINMAX)
 
 find_package(Iconv REQUIRED)
+
+include(FixLinkConflict)
 
 file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
 set(LIB_NAME "com.example.demo")
