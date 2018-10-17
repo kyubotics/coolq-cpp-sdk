@@ -23,16 +23,16 @@ CQ_MAIN {
 
         try {
             api::send_private_msg(e.user_id, e.message); // echo 回去
+
+            api::send_msg(e.target, e.message); // 使用 e.target 指定发送目标
+
+            // MessageSegment 类提供一些静态成员函数以快速构造消息段
+            cq::Message msg = cq::MessageSegment::contact(cq::MessageSegment::ContactType::GROUP, 201865589);
+            msg.send(e.target); // 使用 Message 类的 send 成员函数
         } catch (const cq::exception::ApiError &err) {
             // API 调用失败
             logging::debug(u8"API", u8"调用失败，错误码：" + std::to_string(err.code));
         }
-
-        api::send_msg(e.target, e.message); // 使用 e.target 指定发送目标
-
-        // MessageSegment 类提供一些静态成员函数以快速构造消息段
-        cq::Message msg = cq::MessageSegment::contact(cq::MessageSegment::ContactType::GROUP, 201865589);
-        msg.send(e.target); // 使用 Message 类的 send 成员函数
 
         e.block(); // 阻止事件继续传递给其它插件
     };
