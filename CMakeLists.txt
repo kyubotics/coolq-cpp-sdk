@@ -7,6 +7,7 @@ set(CMAKE_CXX_FLAGS "/MP ${CMAKE_CXX_FLAGS}")  # build with object level paralle
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
+include(cotire)
 include(FindVcpkgIncludeDir)
 
 if(CMAKE_BUILD_TYPE MATCHES "^Debug$")
@@ -31,6 +32,8 @@ set(LIB_NAME "com.example.demo")
 add_library(${LIB_NAME} SHARED ${SOURCE_FILES})
 
 target_link_libraries(${LIB_NAME} ${ICONV_AND_DEPS_LIBRARIES})
+
+cotire(${LIB_NAME})
 
 add_custom_command(TARGET ${LIB_NAME}
                    POST_BUILD
