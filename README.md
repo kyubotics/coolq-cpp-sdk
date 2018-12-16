@@ -24,29 +24,15 @@ CoolQ C++ SDK 封装了跟 DLL 接口相关的底层逻辑，包括：
 
 可以直接用 VS Code 或 VS 打开项目，项目中的所有代码文件全部使用 UTF-8 编码，你后续添加的所有代码文件都需要使用 UTF-8 编码。**注意，如果你使用 VS，则它默认使用 ANSI 编码保存文件，需要手动修改为 UTF-8**。[`com.example.demo.json`](com.example.demo.json) 文件将在 [`scripts/post_build.ps1`](scripts/post_build.ps1) 脚本中被转换为酷 Q 要求的 GB18030 编码。
 
-Vcpkg 使用如下 triplet：
+本项目中的脚本依赖于[PowerShell](https://github.com/PowerShell/PowerShell)，大部分windows电脑预装了PowerShell，但如果你的电脑没有PowerShell，可以前往其主页获取。  
 
-```cmake
-set(VCPKG_TARGET_ARCHITECTURE x86)
-set(VCPKG_CRT_LINKAGE dynamic)
-set(VCPKG_LIBRARY_LINKAGE static)
-set(VCPKG_PLATFORM_TOOLSET v141)
-```
+请点击[Vcpkg](https://github.com/Microsoft/vcpkg)前往vcpkg主页，跟随其引导配置vcpkg环境。  
+请设置环境变量 `VCPKG_ROOT` 为上面所的vcpkg根目录。   
+运行目录下的 `build_envir.bat` 来构建所有的依赖项。  
+依赖项安装完毕之后，无需重新使用 `build_envir.bat` 下载依赖项。  
 
-你需要在 Vcpkg 的 `triplets` 文件夹中创建一个名为 `my-x86-windows-static.cmake` 的文件（文件名可以换为其它，但建议保留 `x86-windows-static` 这部分，似乎 Vcpkg 使用了文件名来判断要安装的包的版本），内容如上。创建了这个 triplet 之后，你需要将 [`scripts/generate.ps1`](scripts/generate.ps1) 中的 `$vcpkg_root`（vcpkg 根目录）和 `$vcpkg_triplet`（triplet 名称，例如 `my-x86-windows-static`）设置成你系统中的相应值（或设置环境变量），如果你使用 VS Code 或 VS 编辑项目，可以直接修改 `.vscode/tasks.json`（VS Code）或 `CMakeSettings.json`（VS）中的 `VCPKG_ROOT` 和 `VCPKG_TRIPLET` 环境变量，**注意，`.vscode/tasks.json` 中有两个 task 需要改**。
-
-除此之外，还需要安装如下依赖（使用上面的 triplet）：
-
-| 模块 | 依赖项 |
-| --- | ----- |
-| `cqsdk` | `boost-algorithm`<br>`libiconv` |
-
-安装命令如下：
-
-```ps1
-cd vcpkg
-.\vcpkg --vcpkg-root . --triplet my-x86-windows-static install boost-algorithm libiconv
-```
+依赖项构建完毕后，运行 `build_debug.bat` 和 `build_release.bat` 来产生构建文件。  
+在 `.vscode/` 文件夹中已经有针对VS Code的构建配置，使用 `Terminal -> Run Task` 来产生构建。  
 
 构建成功后，可以在 `build/Debug/Debug` 或 `build/Release/Release` 中找到生成的 DLL 和 JSON 文件，直接拷贝到酷 Q 的 `app` 目录即可测试使用（酷 Q 需要开启开发模式）。
 

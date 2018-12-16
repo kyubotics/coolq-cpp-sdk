@@ -13,7 +13,6 @@
             ],
             "options": {
                 "env": {
-                    "VCPKG_ROOT": "C:\\CLI\\vcpkg",
                     "VCPKG_TRIPLET": "my-x86-windows-static"
                 }
             },
@@ -31,7 +30,6 @@
             ],
             "options": {
                 "env": {
-                    "VCPKG_ROOT": "C:\\CLI\\vcpkg",
                     "VCPKG_TRIPLET": "my-x86-windows-static"
                 }
             },

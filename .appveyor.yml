@@ -8,6 +8,11 @@ image:
 platform:
   - x86
 
+configuration:
+  - Debug
+  - Release
+  
+  
 environment:
   VCPKG_ROOT: C:\tools\vcpkg
   VCPKG_TRIPLET: my-x86-windows-static
@@ -23,7 +28,5 @@ install:
   - vcpkg --triplet %VCPKG_TRIPLET% install boost-algorithm libiconv
 
 build_script:
-  - powershell scripts/generate.ps1 Debug
-  - powershell scripts/build.ps1 Debug
-  - powershell scripts/generate.ps1 Release
-  - powershell scripts/build.ps1 Release
+  - powershell scripts/generate.ps1 %CONFIGURATION%
+  - powershell scripts/build.ps1 %CONFIGURATION%
