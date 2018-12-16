@@ -28,11 +28,12 @@ CoolQ C++ SDK 封装了跟 DLL 接口相关的底层逻辑，包括：
 
 请点击[Vcpkg](https://github.com/Microsoft/vcpkg)前往vcpkg主页，跟随其引导配置vcpkg环境。  
 请设置环境变量 `VCPKG_ROOT` 为上面所的vcpkg根目录。   
-运行目录下的 `build_envir.bat` 来构建所有的依赖项。  
-依赖项安装完毕之后，无需重新使用 `build_envir.bat` 下载依赖项。  
+运行目录下的 `build_envir.bat` 来构建所有的依赖项。   
 
-依赖项构建完毕后，运行 `build_debug.bat` 和 `build_release.bat` 来产生构建文件。  
-在 `.vscode/` 文件夹中已经有针对VS Code的构建配置，使用 `Terminal -> Run Task` 来产生构建。  
+依赖项构建完毕后，运行 `build_debug.bat` 和 `build_release.bat` 来生成 DLL 文件。  
+如果已经构建完依赖项，在生成 DLL 文件时，无需重新使用 `build_envir.bat` 来构建依赖项。  
+
+除此之外，在 `.vscode/` 文件夹中已经有针对VS Code的构建配置，使用 `Terminal -> Run Task` 来产生构建。  
 
 构建成功后，可以在 `build/Debug/Debug` 或 `build/Release/Release` 中找到生成的 DLL 和 JSON 文件，直接拷贝到酷 Q 的 `app` 目录即可测试使用（酷 Q 需要开启开发模式）。
 
