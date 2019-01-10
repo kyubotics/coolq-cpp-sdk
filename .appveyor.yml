@@ -18,6 +18,7 @@ environment:
 cache: c:\tools\vcpkg\installed\ -> .appveyor.yml  # cache the installed vcpkg packages
 
 install:
+  - git submodule init
   - powershell .\scripts\prepare.ps1 %VCPKG_ROOT%
 
 build_script:
