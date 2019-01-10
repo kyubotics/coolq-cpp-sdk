@@ -8,6 +8,7 @@ set(CMAKE_CXX_FLAGS "/MP ${CMAKE_CXX_FLAGS}")  # build with object level paralle
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 include(cotire)
+include(UseStaticCRT)
 include(FindVcpkgIncludeDir)
 
 if(CMAKE_BUILD_TYPE MATCHES "^Debug$")
@@ -21,11 +22,9 @@ include_directories(src)
 add_definitions(-DBOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE
                 -D_WIN32_WINNT=0x0501
                 -DWIN32_LEAN_AND_MEAN
-				-DNOMINMAX)
+                -DNOMINMAX)
 
 find_package(Iconv REQUIRED)
-
-include(FixLinkConflict)
 
 file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
 set(LIB_NAME "com.example.demo")
