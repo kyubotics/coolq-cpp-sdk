@@ -32,6 +32,7 @@ CoolQ C++ SDK 封装了跟 DLL 接口相关的底层逻辑，包括：
 git clone https://github.com/richardchien/coolq-cpp-sdk.git my-awesome-app
 cd my-awesome-app
 git submodule init
+git submodule update
 ```
 
 ### 准备构建环境
