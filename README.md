@@ -53,7 +53,9 @@ powershell .\scripts\prepare.ps1
 
 移除 [`src/demo.cpp`](src/demo.cpp) 或在其基础上修改，实现自己的功能。如果直接在 `src/demo.cpp` 上修改，请注意修改调用 `CQ_INITIALIZE` 宏时传入的 App Id。
 
-具体 API 请参考 `src/demo.cpp`，或顺着 [`src/cqsdk/cqsdk.h`](src/cqsdk/cqsdk.h) 头文件找进去，IDE 的自动补全帮助会很大。
+具体 API 请参考 `src/demo.cpp`，或顺着 [`src/cqsdk/cqsdk.h`](src/cqsdk/cqsdk.h) 头文件找进去，IDE 的自动补全帮助会很大。除此之外，还可以参考 [richardchien/coolq-http-api](https://github.com/richardchien/coolq-http-api) 项目。
+
+**注意，所有代码文件必须使用 UTF-8 编码。如果你使用 VS，则它默认使用 ANSI 编码保存新创建的文件，需要手动修改为 UTF-8。**
 
 ### 构建项目
 
