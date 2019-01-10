@@ -6,7 +6,7 @@ namespace api = cq::api; // 用于调用酷 Q 提供的接口
 namespace logging = cq::logging; // 用于日志
 namespace message = cq::message; // 提供封装了的 Message 等类
 
-// 初始化 App ID
+// 初始化 App Id
 CQ_INITIALIZE("com.example.demo");
 
 // 插件入口，在静态成员初始化之后，app::on_initialize 事件发生之前被执行，用于配置 SDK 和注册事件回调
