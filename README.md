@@ -2,6 +2,8 @@
 
 [![License](https://img.shields.io/github/license/richardchien/coolq-cpp-sdk.svg)](LICENSE)
 [![Build Status](https://img.shields.io/appveyor/ci/richardchien/coolq-cpp-sdk.svg)](https://ci.appveyor.com/project/richardchien/coolq-cpp-sdk)
+[![QQ 群](https://img.shields.io/badge/qq%E7%BE%A4-590842375-orange.svg)](https://jq.qq.com/?_wv=1027&k=54T1cZB)
+[![Telegram](https://img.shields.io/badge/telegram-chat-blue.svg)](https://t.me/cqhttp)
 
 CoolQ C++ SDK 封装了跟 DLL 接口相关的底层逻辑，包括：
 
