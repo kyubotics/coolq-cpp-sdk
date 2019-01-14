@@ -24,7 +24,7 @@ CoolQ C++ SDK 封装了跟 DLL 接口相关的底层逻辑，包括：
 
 在开始使用之前，请确保你已经安装了 Git 和 CMake，且 `PATH` 中存在 `git` 和 `cmake` 命令。不需要安装 vcpkg，后面的脚本中会自动安装。
 
-除了 Git、CMake，还需要安装 VC++ 2017 v141 工具集。
+除了 Git、CMake，还需要安装 VC++ 2017 v141 工具集，**并且安装 VS 的英文语言包（vcpkg 要求）**。
 
 ### 下载 SDK
 
