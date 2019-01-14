@@ -43,6 +43,8 @@ powershell .\scripts\prepare.ps1
 
 [`scripts/prepare.ps1`](scripts/prepare.ps1) 脚本会在当前项目目录的 `vcpkg` 子目录中安装 vcpkg，并安装所需依赖。
 
+注意，如果 PowerShell 提示不让运行脚本，需要先使用管理员权限打开 PowerShell，运行 `Set-ExecutionPolicy Unrestricted`，然后再重新运行上面的脚本；如果 vcpkg 安装依赖时出错，比较常见的问题是网络超时，请适当设置 `HTTP_PROXY` 和 `HTTPS_PROXY`。
+
 ### 修改 App Id 和相关信息
 
 修改 [`CMakeLists.txt`](CMakeLists.txt) 的 `LIB_NAME` 变量为你的 App Id，例如 `set(LIB_NAME "com.company.my-awesome-app")`。
