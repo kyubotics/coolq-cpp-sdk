@@ -228,5 +228,6 @@ git checkout 7578a485b181ded330b87cc72726f01e38ff7ed6 -- ports
 
 | 项目地址 | 简介 |
 | ------- | --- |
+| [richardchien/coolq-http-api](https://github.com/richardchien/coolq-http-api) | 酷Q HTTP API 插件 |
 | [JogleLew/coolq-telegram-bot-x](https://github.com/JogleLew/coolq-telegram-bot-x) | QQ / Telegram 群组消息转发机器人 |
 | [dynilath/coolq-dicebot](https://github.com/dynilath/coolq-dicebot) | 酷Q 骰子机器人 |
