@@ -19,7 +19,7 @@ add_definitions(-DBOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE
                 -DWIN32_LEAN_AND_MEAN
                 -DNOMINMAX)
 
-find_package(Iconv REQUIRED)
+find_package(unofficial-iconv CONFIG REQUIRED)
 
 include(FixLinkConflict)
 
@@ -27,7 +27,7 @@ file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
 set(LIB_NAME "com.example.demo")
 add_library(${LIB_NAME} SHARED ${SOURCE_FILES})
 
-target_link_libraries(${LIB_NAME} ${ICONV_AND_DEPS_LIBRARIES})
+target_link_libraries(${LIB_NAME} PRIVATE unofficial::iconv::libiconv unofficial::iconv::libcharset)
 
 cotire(${LIB_NAME})
 

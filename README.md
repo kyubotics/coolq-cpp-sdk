@@ -75,9 +75,11 @@ CQ_MAIN {
 
 本项目使用 [CMake](https://cmake.org/) 构建，依赖项通过 [vcpkg](https://github.com/Microsoft/vcpkg) 管理。如果你没有使用过这两个工具，请先前往它们的官方网站了解基本用法。
 
-在开始使用之前，请确保你已经安装了 Git 和 CMake，且 `PATH` 中存在 `git` 和 `cmake` 命令。不需要安装 vcpkg，后面的脚本中会自动安装。
+在开始使用之前，请确保你已经安装了 Git，且 `PATH` 中存在 `git` 命令。不需要安装 vcpkg，后面的脚本中会自动安装。
 
-除了 Git、CMake，还需要安装 VC++ 2017 v141 工具集，**并且安装 VS 的英文语言包（vcpkg 要求）**。
+然后确保安装了 Visual Studio **2017**（暂不支持 2019），并勾选「使用 C++ 的桌面开发」，确保安装了 CMake、**VC++ 2017 v141**、Windows 10 SDK 这三个组件。其中，如果系统中已经安装了 CMake，无需再在 VS Installer 中安装，但需要确保命令已添加进 `PATH`。
+
+除此之外，vcpkg 还要求安装 VS 2017 的英文语言包。
 
 ### 下载 SDK
 
@@ -96,7 +98,7 @@ powershell .\scripts\prepare.ps1
 
 [`scripts/prepare.ps1`](scripts/prepare.ps1) 脚本会在当前项目目录的 `vcpkg` 子目录中安装 vcpkg，并安装所需依赖。
 
-注意，如果 PowerShell 提示不让运行脚本，需要先使用管理员权限打开 PowerShell，运行 `Set-ExecutionPolicy Unrestricted`，然后再重新运行上面的脚本；如果 vcpkg 安装依赖时出错，比较常见的问题是网络超时，请适当设置 `HTTP_PROXY` 和 `HTTPS_PROXY`。
+*注意，如果 PowerShell 提示不让运行脚本，需要先使用管理员权限打开 PowerShell，运行 `Set-ExecutionPolicy Unrestricted`，然后再重新运行上面的脚本；如果 vcpkg 安装依赖时出错，比较常见的问题是网络超时，请适当设置 `HTTP_PROXY` 和 `HTTPS_PROXY`。*
 
 ### 修改 App Id 和相关信息
 
@@ -119,7 +121,7 @@ powershell .\scripts\generate.ps1 Debug
 powershell .\scripts\build.ps1 Debug
 ```
 
-上面两条命令分别生成 build 目录和构建项目，将 `Debug` 改为 `Release` 可以构建 release 版本。如果安装了 CMake 还没支持的较新版本 VS，需要先手动进入 VS 2017 的 Developer Command Prompt，再执行上面的命令。
+上面两条命令分别生成 build 目录和构建项目，将 `Debug` 改为 `Release` 可以构建 release 版本。如果安装了 CMake 还没支持的较新版本 VS（例如 VS 2019），需要先手动进入 VS 2017 的 Developer Command Prompt，再执行上面的命令。
 
 如果你使用 VS Code，可以直接运行 task；如果使用 VS，可以直接选择菜单 CMake - 全部生成。
 
@@ -160,13 +162,13 @@ git submodule update
 
 ### 安装依赖
 
-如果需要安装依赖，请使用 triplet `x86-windows-static-custom`，参考如下命令：
+如果需要安装依赖，可以直接使用 vcpkg，通过 `--triplet x86-windows-static-custom` 指定 triplet，或者使用 SDK 提供的包装脚本（参数和 vcpkg 相同），例如：
 
 ```ps1
-.\vcpkg\vcpkg.exe --triplet x86-windows-static-custom install curl
+.\scripts\vcpkg.ps1 install curl
 ```
 
-然后按需在 `CMakeLists.txt` 添加相应 `find_package` 语句和修改 `target_link_libraries`。注意，vcpkg 的 CMake 工具链文件有时并不能正确找到依赖的依赖的 LIB 文件，需要手动编写 `FindXxx.cmake` 文件，参考 [`cmake/Modules/FindIconv.cmake`](cmake/Modules/FindIconv.cmake)。
+然后按需在 `CMakeLists.txt` 添加相应 `find_package` 语句和修改 `target_link_libraries`。注意，vcpkg 的 CMake 工具链文件有时并不能正确找到依赖的依赖的 LIB 文件，需要手动编写 `FindXxx.cmake` 文件，参考 [`richardchien/coolq-http-api/cmake/Modules/FindCURL.cmake`](https://github.com/richardchien/coolq-http-api/blob/master/cmake/Modules/FindCURL.cmake)。
 
 ### 固定依赖包版本
 
