@@ -129,7 +129,7 @@ powershell .\scripts\build.ps1 Debug
 
 复制 `build/Debug/Debug`（如果是 release 编译则是 `build/Release/Release`）中的 DLL 和 JSON 文件到 酷Q 的 `app` 目录下，重启 酷Q 即可（注意需要开启 酷Q 的开发模式）。
 
-如果不想每次构建后都手动安装插件，可以添加 [`scripts/install.ps1`](scripts/install.ps1) 文件（使用 UTF-16 LE 编码）如下：
+如果不想每次构建后都手动安装插件，可以添加 `scripts/install.ps1` 文件（使用 UTF-16 LE 编码）如下：
 
 ```ps1
 $libName = $args[0]
