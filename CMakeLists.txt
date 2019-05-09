@@ -14,17 +14,22 @@ include(FixDebugLibraryLookup)
 include_directories(${VCPKG_INCLUDE_DIR})
 include_directories(src)
 
-add_definitions(-DBOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE
-                -D_WIN32_WINNT=0x0501
-                -DWIN32_LEAN_AND_MEAN
-                -DNOMINMAX)
+add_compile_definitions(BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE
+                        _WIN32_WINNT=0x0501
+                        WIN32_LEAN_AND_MEAN
+                        NOMINMAX)
+
+# read app id from app_id.txt
+file(READ "app_id.txt" APP_ID)
+string(STRIP "${APP_ID}" APP_ID)
+add_compile_definitions(APP_ID=${APP_ID})
 
 find_package(unofficial-iconv CONFIG REQUIRED)
 
 include(FixLinkConflict)
 
 file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
-set(LIB_NAME "com.example.demo")
+set(LIB_NAME "app")
 add_library(${LIB_NAME} SHARED ${SOURCE_FILES})
 
 target_link_libraries(${LIB_NAME} PRIVATE unofficial::iconv::libiconv unofficial::iconv::libcharset)
@@ -34,4 +39,4 @@ cotire(${LIB_NAME})
 add_custom_command(TARGET ${LIB_NAME}
                    POST_BUILD
                    COMMAND
-                   powershell -ExecutionPolicy Bypass -NoProfile -File "${PROJECT_SOURCE_DIR}/scripts/post_build.ps1" ${LIB_NAME} "$<TARGET_FILE_DIR:${LIB_NAME}>")
+                   powershell -ExecutionPolicy Bypass -NoProfile -File "${PROJECT_SOURCE_DIR}/scripts/post_build.ps1" ${APP_ID} ${LIB_NAME} "$<TARGET_FILE_DIR:${LIB_NAME}>")

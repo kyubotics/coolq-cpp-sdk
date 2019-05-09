@@ -23,46 +23,45 @@ CoolQ C++ SDK 封装了跟 DLL 接口相关的底层逻辑，包括：
 ```cpp
 #include "cqsdk/cqsdk.h"
 
-namespace app = cq::app; // 插件本身的生命周期事件和管理
-namespace event = cq::event; // 用于注册 QQ 相关的事件处理函数
-namespace api = cq::api; // 用于调用酷 Q 提供的接口
-namespace logging = cq::logging; // 用于日志
-namespace message = cq::message; // 提供封装了的 Message 等类
-
-// 初始化 App Id
-CQ_INITIALIZE("com.example.demo");
+// namespace cq::app 包含插件本身的生命周期事件和管理
+// namespace cq::event 用于注册 QQ 相关的事件处理函数
+// namespace cq::api 用于调用酷 Q 提供的接口
+// namespace cq::logging 用于日志
+// namespace cq::message 提供封装了的 Message 等类
 
 // 插件入口，在静态成员初始化之后，app::on_initialize 事件发生之前被执行，用于配置 SDK 和注册事件回调
 CQ_MAIN {
-    app::on_enable = [] {
-        // logging、api、dir 等命名空间下的函数只能在事件回调函数内部调用，而不能直接在 CQ_MAIN 中调用
-        logging::debug(u8"启用", u8"插件已启动");
+    cq::app::on_enable = [] {
+        // cq::logging、cq::api、cq::dir 等命名空间下的函数只能在事件回调函数内部调用，而不能直接在 CQ_MAIN 中调用
+        cq::logging::debug(u8"启用", u8"插件已启动");
     };
 
-    event::on_private_msg = [](const cq::PrivateMessageEvent &e) {
-        logging::debug(u8"消息", u8"收到私聊消息：" + e.message + u8"，发送者：" + std::to_string(e.user_id));
+    cq::event::on_private_msg = [](const cq::PrivateMessageEvent &e) {
+        cq::logging::debug(u8"消息", u8"收到私聊消息：" + e.message + u8"，发送者：" + std::to_string(e.user_id));
+
+        if (e.user_id != 1002647525) return;
 
         try {
-            api::send_private_msg(e.user_id, e.message); // echo 回去
+            cq::api::send_private_msg(e.user_id, e.message); // echo 回去
 
-            api::send_msg(e.target, e.message); // 使用 e.target 指定发送目标
+            cq::api::send_msg(e.target, e.message); // 使用 e.target 指定发送目标
 
             // MessageSegment 类提供一些静态成员函数以快速构造消息段
             cq::Message msg = cq::MessageSegment::contact(cq::MessageSegment::ContactType::GROUP, 201865589);
             msg.send(e.target); // 使用 Message 类的 send 成员函数
         } catch (const cq::exception::ApiError &err) {
             // API 调用失败
-            logging::debug(u8"API", u8"调用失败，错误码：" + std::to_string(err.code));
+            cq::logging::debug(u8"API", u8"调用失败，错误码：" + std::to_string(err.code));
         }
 
         e.block(); // 阻止事件继续传递给其它插件
     };
 
-    event::on_group_msg = [](const auto &e /* 使用 C++ 的 auto 关键字 */) {
-        const auto memlist = api::get_group_member_list(e.group_id); // 获取数据接口
+    cq::event::on_group_msg = [](const auto &e /* 使用 C++ 的 auto 关键字 */) {
+        const auto memlist = cq::api::get_group_member_list(e.group_id); // 获取数据接口
         cq::Message msg = u8"本群一共有 "; // string 到 Message 自动转换
         msg += std::to_string(memlist.size()) + u8" 个成员"; // Message 类可以进行加法运算
-        message::send(e.target, msg); // 使用 message 命名空间的 send 函数
+        cq::message::send(e.target, msg); // 使用 message 命名空间的 send 函数
     };
 }
 ```
@@ -102,13 +101,13 @@ powershell .\scripts\prepare.ps1
 
 ### 修改 App Id 和相关信息
 
-修改 [`CMakeLists.txt`](CMakeLists.txt) 的 `LIB_NAME` 变量为你的 App Id，例如 `set(LIB_NAME "com.company.my-awesome-app")`。
+修改 [`app_id.txt`](app_id.txt) 的内容为你的 App Id，例如 `com.company.my-awesome-app`。
 
-复制 [`com.example.demo.json`](com.example.demo.json) 文件，并命名为 `<AppId>.json`，例如 `com.company.my-awesome-app.json`。按需修改其中的信息，通常需要修改 `name`、`version`、`version_id`、`author`、`description`，根据实际功能可能还需要修改 `menu` 和 `auth`。请不要修改 JSON 描述文件的 `event` 字段，因为事件处理函数的名字已经写死在了 SDK 中。另外，这里 JSON 描述文件使用 **UTF-8 编码**，将会在构建时**自动转换成 GB18030 编码**，如果你曾经使用过其它 SDK，可能需要注意一下。
+按需修改 [`app.json`](app.json) 文件中的信息，通常需要修改 `name`、`version`、`version_id`、`author`、`description`，根据实际功能可能还需要修改 `menu` 和 `auth`。请不要修改 JSON 描述文件的 `event` 字段，因为事件处理函数的名字已经写死在了 SDK 中。另外，这里 JSON 描述文件使用 **UTF-8 编码**，将会在构建时**自动转换成 GB18030 编码**，如果你曾经使用过其它 SDK，可能需要注意一下。
 
 ### 编写功能
 
-移除 [`src/demo.cpp`](src/demo.cpp) 或在其基础上修改，实现自己的功能。如果直接在 `src/demo.cpp` 上修改，请注意修改调用 `CQ_INITIALIZE` 宏时传入的 App Id。
+移除 [`src/demo.cpp`](src/demo.cpp) 或在其基础上修改，实现自己的功能。
 
 具体 API 请参考 `src/demo.cpp`，或顺着 [`src/cqsdk/cqsdk.h`](src/cqsdk/cqsdk.h) 头文件找进去，IDE 的自动补全帮助会很大。除此之外，还可以参考 [richardchien/coolq-http-api](https://github.com/richardchien/coolq-http-api) 项目。
 
@@ -127,23 +126,27 @@ powershell .\scripts\build.ps1 Debug
 
 ### 安装插件到 酷Q
 
-复制 `build/Debug/Debug`（如果是 release 编译则是 `build/Release/Release`）中的 DLL 和 JSON 文件到 酷Q 的 `app` 目录下，重启 酷Q 即可（注意需要开启 酷Q 的开发模式）。
+复制 `build/Debug/Debug`（如果是 release 编译则是 `build/Release/Release`）中和你的 App Id 名字相同的文件夹到 酷Q 的 `dev` 目录下，在 酷Q 中重载应用即可（注意需要开启 酷Q 的开发模式）。
 
 如果不想每次构建后都手动安装插件，可以添加 `scripts/install.ps1` 文件（使用 UTF-16 LE 编码）如下：
 
 ```ps1
-$libName = $args[0]
-$outDir = $args[1]
+$coolqRoot = "C:\Users\Richard\Lab\酷Q Pro" # 注意修改 酷Q 目录
 
+$appId = $args[0]
+$libName = $args[1]
+$appOutDir = $args[2]
+
+$coolqAppDevDir = "$coolqRoot\dev\$appId"
 $dllName = "$libName.dll"
-$dllPath = "$outDir\$dllName"
+$dllPath = "$appOutDir\$dllName"
 $jsonName = "$libName.json"
-$jsonPath = "$outDir\$jsonName"
+$jsonPath = "$appOutDir\$jsonName"
 
 Write-Host "正在拷贝插件到 酷Q 应用文件夹……"
 
-Copy-Item -Force $dllPath "C:\path\to\coolq\app\$dllName" # 注意修改 酷Q 目录
-Copy-Item -Force $jsonPath "C:\path\to\coolq\app\$jsonName"
+Copy-Item -Force $dllPath "$coolqAppDevDir\$dllName"
+Copy-Item -Force $jsonPath "$coolqAppDevDir\$jsonName"
 
 Write-Host "拷贝完成" -ForegroundColor Green
 ```
