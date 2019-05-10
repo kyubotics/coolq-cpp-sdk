@@ -22,6 +22,7 @@ add_compile_definitions(BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE
 # read app id from app_id.txt
 file(READ "app_id.txt" APP_ID)
 string(STRIP "${APP_ID}" APP_ID)
+set(APP_ID "\"${APP_ID}\"")
 add_compile_definitions(APP_ID=${APP_ID})
 
 find_package(unofficial-iconv CONFIG REQUIRED)
