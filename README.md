@@ -76,9 +76,7 @@ CQ_MAIN {
 
 在开始使用之前，请确保你已经安装了 Git，且 `PATH` 中存在 `git` 命令。不需要安装 vcpkg，后面的脚本中会自动安装。
 
-然后确保安装了 Visual Studio **2017**（暂不支持 2019），并勾选「使用 C++ 的桌面开发」，确保安装了 CMake、**VC++ 2017 v141**、Windows 10 SDK 这三个组件。其中，如果系统中已经安装了 CMake，无需再在 VS Installer 中安装，但需要确保命令已添加进 `PATH`。
-
-除此之外，vcpkg 还要求安装 VS 2017 的英文语言包。
+然后确保安装了 **Visual Studio 2019**，并勾选「使用 C++ 的桌面开发」，确保安装了 CMake、**MSVC v142**、**Windows 10 SDK** 这三个组件。其中，如果系统中已经安装了 CMake，无需再在 VS Installer 中安装，但需要确保命令已添加进 `PATH`。除此之外，vcpkg 还要求安装 VS 2019 的**英文语言包**。
 
 ### 下载 SDK
 
@@ -103,7 +101,7 @@ powershell .\scripts\prepare.ps1
 
 修改 [`app_id.txt`](app_id.txt) 的内容为你的 App Id，例如 `com.company.my-awesome-app`。
 
-按需修改 [`app.json`](app.json) 文件中的信息，通常需要修改 `name`、`version`、`version_id`、`author`、`description`，根据实际功能可能还需要修改 `menu` 和 `auth`。请不要修改 JSON 描述文件的 `event` 字段，因为事件处理函数的名字已经写死在了 SDK 中。另外，这里 JSON 描述文件使用 **UTF-8 编码**，将会在构建时**自动转换成 GB18030 编码**，如果你曾经使用过其它 SDK，可能需要注意一下。
+按需修改 [`app.json`](app.json) 文件中的信息，通常需要修改 `name`、`version`、`version_id`、`author`、`description`，根据实际功能可能还需要修改 `menu` 和 `auth`。请不要修改 `event` 字段，因为事件处理函数的名字已经写死在了 SDK 中。
 
 ### 编写功能
 
@@ -120,7 +118,7 @@ powershell .\scripts\generate.ps1 Debug
 powershell .\scripts\build.ps1 Debug
 ```
 
-上面两条命令分别生成 build 目录和构建项目，将 `Debug` 改为 `Release` 可以构建 release 版本。如果安装了 CMake 还没支持的较新版本 VS（例如 VS 2019），需要先手动进入 VS 2017 的 Developer Command Prompt，再执行上面的命令。
+上面两条命令分别生成 build 目录和构建项目，将 `Debug` 改为 `Release` 可以构建 release 版本。如果安装了 CMake 还没支持的较新版本 VS，需要先手动进入 VS 2019 的 Developer Command Prompt，再执行上面的命令。
 
 如果你使用 VS Code，可以直接运行 task；如果使用 VS，可以直接选择菜单 CMake - 全部生成。
 
