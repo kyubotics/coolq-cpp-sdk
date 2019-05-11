@@ -76,7 +76,7 @@ CQ_MAIN {
 
 在开始使用之前，请确保你已经安装了 Git，且 `PATH` 中存在 `git` 命令。不需要安装 vcpkg，后面的脚本中会自动安装。
 
-然后确保安装了 **Visual Studio 2019**，并勾选「使用 C++ 的桌面开发」，确保安装了 CMake、**MSVC v142**、**Windows 10 SDK** 这三个组件。其中，如果系统中已经安装了 CMake，无需再在 VS Installer 中安装，但需要确保命令已添加进 `PATH`。除此之外，vcpkg 还要求安装 VS 2019 的**英文语言包**。
+然后确保安装了 **Visual Studio 2017 或 2019**，并勾选「使用 C++ 的桌面开发」，确保安装了 CMake、**MSVC v141 或 v142**、**Windows 10 SDK** 这三个组件。其中，如果系统中已经安装了 CMake，无需再在 VS Installer 中安装，但需要确保命令已添加进 `PATH`。除此之外，vcpkg 还要求安装 VS 的**英文语言包**。
 
 ### 下载 SDK
 
@@ -118,7 +118,7 @@ powershell .\scripts\generate.ps1 Debug
 powershell .\scripts\build.ps1 Debug
 ```
 
-上面两条命令分别生成 build 目录和构建项目，将 `Debug` 改为 `Release` 可以构建 release 版本。如果安装了 CMake 还没支持的较新版本 VS，需要先手动进入 VS 2019 的 Developer Command Prompt，再执行上面的命令。
+上面两条命令分别生成 build 目录和构建项目，将 `Debug` 改为 `Release` 可以构建 release 版本。如果安装了 CMake 还没支持的较新版本 VS，需要先手动进入 VS 2017 或 2019 的 Developer Command Prompt，再执行上面的命令。
 
 如果你使用 VS Code，可以直接运行 task；如果使用 VS，可以直接选择菜单 CMake - 全部生成。
 
@@ -143,6 +143,7 @@ $jsonPath = "$appOutDir\$jsonName"
 
 Write-Host "正在拷贝插件到 酷Q 应用文件夹……"
 
+New-Item -Path $coolqAppDevDir -ItemType Directory -ErrorAction SilentlyContinue
 Copy-Item -Force $dllPath "$coolqAppDevDir\$dllName"
 Copy-Item -Force $jsonPath "$coolqAppDevDir\$jsonName"
 
