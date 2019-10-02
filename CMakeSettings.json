@@ -9,13 +9,13 @@
     "configurations": [
         {
             "name": "Debug",
-            "generator": "Visual Studio 15 2017",
+            "generator": "Visual Studio 16 2019",
             "configurationType": "Debug",
             "inheritEnvironments": [
                 "msvc_x86"
             ],
             "buildRoot": "${projectDir}\\build\\${name}",
-            "cmakeCommandArgs": "-T v141 -DCMAKE_BUILD_TYPE=${name}",
+            "cmakeCommandArgs": "-A Win32 -T v142 -DCMAKE_BUILD_TYPE=${name}",
             "buildCommandArgs": "",
             "ctestCommandArgs": "",
             "variables": [
@@ -31,13 +31,13 @@
         },
         {
             "name": "Release",
-            "generator": "Visual Studio 15 2017",
+            "generator": "Visual Studio 16 2019",
             "configurationType": "Release",
             "inheritEnvironments": [
                 "msvc_x86"
             ],
             "buildRoot": "${projectDir}\\build\\${name}",
-            "cmakeCommandArgs": "-T v141 -DCMAKE_BUILD_TYPE=${name}",
+            "cmakeCommandArgs": "-A Win32 -T v142 -DCMAKE_BUILD_TYPE=${name}",
             "buildCommandArgs": "",
             "ctestCommandArgs": "",
             "variables": [
