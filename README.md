@@ -18,6 +18,26 @@ CoolQ C++ SDK 封装了跟 DLL 接口相关的底层逻辑，包括：
 
 并且对外提供了更现代的 C++ 接口，从而为更方便地编写插件提供可能。
 
+## 目录
+
+- [CoolQ C++ SDK](#coolq-c-sdk)
+  - [目录](#%e7%9b%ae%e5%bd%95)
+  - [示例](#%e7%a4%ba%e4%be%8b)
+  - [使用方式](#%e4%bd%bf%e7%94%a8%e6%96%b9%e5%bc%8f)
+    - [预备](#%e9%a2%84%e5%a4%87)
+    - [下载 SDK](#%e4%b8%8b%e8%bd%bd-sdk)
+    - [准备构建环境](#%e5%87%86%e5%a4%87%e6%9e%84%e5%bb%ba%e7%8e%af%e5%a2%83)
+    - [修改 App Id 和相关信息](#%e4%bf%ae%e6%94%b9-app-id-%e5%92%8c%e7%9b%b8%e5%85%b3%e4%bf%a1%e6%81%af)
+    - [编写功能](#%e7%bc%96%e5%86%99%e5%8a%9f%e8%83%bd)
+    - [构建项目](#%e6%9e%84%e5%bb%ba%e9%a1%b9%e7%9b%ae)
+    - [安装插件到 酷Q](#%e5%ae%89%e8%a3%85%e6%8f%92%e4%bb%b6%e5%88%b0-%e9%85%b7q)
+    - [更新 SDK](#%e6%9b%b4%e6%96%b0-sdk)
+    - [安装依赖](#%e5%ae%89%e8%a3%85%e4%be%9d%e8%b5%96)
+    - [固定依赖包版本](#%e5%9b%ba%e5%ae%9a%e4%be%9d%e8%b5%96%e5%8c%85%e7%89%88%e6%9c%ac)
+    - [使用 CI 自动构建](#%e4%bd%bf%e7%94%a8-ci-%e8%87%aa%e5%8a%a8%e6%9e%84%e5%bb%ba)
+  - [插件生命周期](#%e6%8f%92%e4%bb%b6%e7%94%9f%e5%91%bd%e5%91%a8%e6%9c%9f)
+  - [应用案例](#%e5%ba%94%e7%94%a8%e6%a1%88%e4%be%8b)
+
 ## 示例
 
 ```cpp
@@ -76,6 +96,8 @@ CQ_MAIN {
 
 在开始使用之前，请确保你已经安装了 Git，且 `PATH` 中存在 `git` 命令。不需要安装 vcpkg，后面的脚本中会自动安装。
 
+构建脚本要求 PowerShell 5+，如果系统是 Windows 10，则使用自带的即可，如果是 Windows 7 或 8.1，可以安装 PowerShell Core 6 或更新版本，安装方法见 [在 Windows 上安装 PowerShell Core](https://docs.microsoft.com/zh-cn/powershell/scripting/install/installing-powershell-core-on-windows?view=powershell-6)。
+
 然后确保安装了 **Visual Studio 2019** 或 **Visual Studio 2019 生成工具**（如果使用 2017 版本可能需要自行修改 `CMakeSettings.json` 中的 `generator` 参数），并勾选「使用 C++ 的桌面开发」，确保安装了 **MSVC v142**、**Windows 10 SDK**、**用于 Windows 的 C++ CMake 工具** 这三个组件。其中，如果系统中已经安装了 CMake，无需再在 VS Installer 中安装，但需要确保命令已添加进 `PATH`。除此之外，vcpkg 还要求安装 VS 的**英文语言包**。
 
 > 推荐使用 VS Code 开发，只需安装 Visual Studio 2019 生成工具，不需要安装臃肿的 VS IDE。
@@ -94,7 +116,7 @@ git submodule update
 ```ps1
 powershell .\scripts\prepare.ps1
 
-# 如果不打算使用 vcpkg 管理依赖，可以运行：
+# 如果打算使用预编译的依赖，可以运行：
 powershell .\scripts\prepare_prebuilt.ps1
 
 # 请不要混用上面的两个脚本，只需运行一个即可
@@ -104,7 +126,7 @@ powershell .\scripts\prepare_prebuilt.ps1
 
 > 如何选择？如果你只是想快速试用 demo，建议使用 prepare_prebuilt；如果你的网络环境不佳，使用 prepare 安装依赖太慢，也可以使用 prepare_prebuilt；如果你打算开发较大型的插件项目，且希望使用 vcpkg 来方便地管理依赖，可以使用 prepare。
 
-*注意，如果 PowerShell 提示不让运行脚本，需要先使用管理员权限打开 PowerShell，运行 `Set-ExecutionPolicy Unrestricted`，然后再重新运行上面的脚本；如果 vcpkg 安装依赖时出错，比较常见的问题是网络超时，请适当设置 `HTTP_PROXY` 和 `HTTPS_PROXY`。*
+*注意，如果 PowerShell 提示不让运行脚本，需要先使用管理员权限打开 PowerShell，运行 `Set-ExecutionPolicy Unrestricted`，然后再重新运行上面的脚本；如果 vcpkg 安装依赖时出错，比较常见的问题是网络超时，请适当设置 `HTTP_PROXY` 和 `HTTPS_PROXY`，或使用预编译依赖。*
 
 ### 修改 App Id 和相关信息
 
@@ -199,6 +221,14 @@ git checkout 7578a485b181ded330b87cc72726f01e38ff7ed6 -- ports
 
 内容是 Git commit 的 hash。`scripts/prepare.ps1` 脚本会自动在准备构建环境的时候将 `ports` 目录固定到此 commit 的版本。
 
+### 使用 CI 自动构建
+
+[`.appveyor.yml`](.appveyor.yml) 提供了 [AppVeyor](https://www.appveyor.com/) 的配置，几乎不用修改便可直接使用：在 AppVeyor 中新建项目，选好项目仓库，然后在 Settings 中「Custom configuration .yml file name」处填写 `.appveyor.yml` 即可。
+
+在每次 Git 推送之后，CI 会自动运行构建脚本，并将构建出的 `app.dll` 和 `app.json` 打包进 `<app_id>.zip`，可在 AppVeyor 构建任务的「Artifacts」处下载。
+
+注意，目前无法直接打包成 CPK 格式，如需分发，仍需手动在 酷Q 应用目录中打包。
+
 ## 插件生命周期
 
 ```
@@ -241,8 +271,8 @@ git checkout 7578a485b181ded330b87cc72726f01e38ff7ed6 -- ports
 
 ## 应用案例
 
-| 项目地址 | 简介 |
-| ------- | --- |
-| [richardchien/coolq-http-api](https://github.com/richardchien/coolq-http-api) | 酷Q HTTP API 插件 |
+| 项目地址                                                                          | 简介                             |
+| --------------------------------------------------------------------------------- | -------------------------------- |
+| [richardchien/coolq-http-api](https://github.com/richardchien/coolq-http-api)     | 酷Q HTTP API 插件                |
 | [JogleLew/coolq-telegram-bot-x](https://github.com/JogleLew/coolq-telegram-bot-x) | QQ / Telegram 群组消息转发机器人 |
-| [dynilath/coolq-dicebot](https://github.com/dynilath/coolq-dicebot) | 酷Q 骰子机器人 |
+| [dynilath/coolq-dicebot](https://github.com/dynilath/coolq-dicebot)               | 酷Q 骰子机器人                   |
