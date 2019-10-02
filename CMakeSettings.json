@@ -15,7 +15,7 @@
                 "msvc_x86"
             ],
             "buildRoot": "${projectDir}\\build\\${name}",
-            "cmakeCommandArgs": "-A Win32 -T v142 -DCMAKE_BUILD_TYPE=${name}",
+            "cmakeCommandArgs": "-T v142 -DCMAKE_BUILD_TYPE=${name}",
             "buildCommandArgs": "",
             "ctestCommandArgs": "",
             "variables": [
@@ -37,7 +37,7 @@
                 "msvc_x86"
             ],
             "buildRoot": "${projectDir}\\build\\${name}",
-            "cmakeCommandArgs": "-A Win32 -T v142 -DCMAKE_BUILD_TYPE=${name}",
+            "cmakeCommandArgs": "-T v142 -DCMAKE_BUILD_TYPE=${name}",
             "buildCommandArgs": "",
             "ctestCommandArgs": "",
             "variables": [

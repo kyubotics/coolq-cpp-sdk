@@ -14,6 +14,18 @@
             "group": "build"
         },
         {
+            "label": "prepare prebuilt",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-File",
+                "'${workspaceFolder}/scripts/prepare_prebuilt.ps1'"
+            ],
+            "problemMatcher": [],
+            "group": "build"
+        },
+        {
             "label": "generate debug",
             "type": "shell",
             "command": "powershell",
