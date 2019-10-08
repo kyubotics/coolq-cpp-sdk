@@ -130,9 +130,9 @@ powershell .\scripts\prepare_prebuilt.ps1
 
 ### 修改 App Id 和相关信息
 
-修改 [`app_id.txt`](app_id.txt) 的内容为你的 App Id，例如 `com.company.my-awesome-app`。
+修改 [`app_id.txt`](app_id.txt) 的内容为你的 App Id，例如 `com.company.my-awesome-app`，这个 App Id 的命名规范见 [appid 规范](https://docs.cqp.im/dev/v9/appid/)。
 
-按需修改 [`app.json`](app.json) 文件中的信息，通常需要修改 `name`、`version`、`version_id`、`author`、`description`，根据实际功能可能还需要修改 `menu` 和 `auth`。请不要修改 `event` 字段，因为事件处理函数的名字已经写死在了 SDK 中。
+按需修改 [`app.json`](app.json) 文件中的信息，通常需要修改 `name`、`version`、`version_id`、`author`、`description`，根据实际功能可能还需要修改 `menu` 和 `auth`，具体字段含义见 [app.json](https://docs.cqp.im/dev/v9/app.json/)。请不要修改 `event` 字段，因为事件处理函数的名字已经写死在了 SDK 中。
 
 ### 编写功能
 
@@ -155,7 +155,9 @@ powershell .\scripts\build.ps1 Debug
 
 ### 安装插件到 酷Q
 
-复制 `build/Debug/Debug`（如果是 release 编译则是 `build/Release/Release`）中和你的 App Id 名字相同的文件夹到 酷Q 的 `dev` 目录下，在 酷Q 中重载应用即可（注意需要开启 酷Q 的开发模式）。
+首先**确保开启了 酷Q 的开发模式**，并了解 酷Q 应用开发、调试、打包的基本流程，见 [快速入门](https://docs.cqp.im/dev/v9/getting-started/)。
+
+在项目构建完成后，复制 `build/Debug/Debug`（如果是 release 编译则是 `build/Release/Release`）中和你的 App Id 名字相同的文件夹到 酷Q 的 `dev` 目录下，在 酷Q 中重载应用即可。
 
 如果不想每次构建后都手动安装插件，可以添加 `scripts/install.ps1` 文件（使用 UTF-16 LE 编码）如下：
 
