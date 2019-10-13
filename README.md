@@ -300,4 +300,4 @@ AllSigned 和 RemoteSigned 执行策略可防止 Windows PowerShell 运行没有
 ```
 set-executionpolicy remotesigned
 ```
-之后就能够正常执行环境准备脚本了
+之后就能够正常执行环境准备脚本了.
