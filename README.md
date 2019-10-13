@@ -37,6 +37,7 @@ CoolQ C++ SDK 封装了跟 DLL 接口相关的底层逻辑，包括：
     - [使用 CI 自动构建](#%e4%bd%bf%e7%94%a8-ci-%e8%87%aa%e5%8a%a8%e6%9e%84%e5%bb%ba)
   - [插件生命周期](#%e6%8f%92%e4%bb%b6%e7%94%9f%e5%91%bd%e5%91%a8%e6%9c%9f)
   - [应用案例](#%e5%ba%94%e7%94%a8%e6%a1%88%e4%be%8b)
+  - [常见问题](#FQA)
 
 ## 示例
 
@@ -278,3 +279,25 @@ git checkout 7578a485b181ded330b87cc72726f01e38ff7ed6 -- ports
 | [richardchien/coolq-http-api](https://github.com/richardchien/coolq-http-api)     | 酷Q HTTP API 插件                |
 | [JogleLew/coolq-telegram-bot-x](https://github.com/JogleLew/coolq-telegram-bot-x) | QQ / Telegram 群组消息转发机器人 |
 | [dynilath/coolq-dicebot](https://github.com/dynilath/coolq-dicebot)               | 酷Q 骰子机器人                   |
+
+
+## FQA
+1. 问题1 ： 准备构建环境时出现下面系统禁止脚本运行错误。
+```
+.\scripts\prepare.ps1 : 无法加载文件 C:\coolq\my-coolqcd\scripts\prepare.ps1，因为在此系统上禁止运行脚本。有关详细信息，请参阅 https:/go.microsoft.com/fwlink/?LinkID=135170 中的 about_Execution_Policies。
+```
+
+这个问题的原因是系统不允许运行您编写的未签名脚本和来自其他用户的签名脚本。
+使用下面命令进行查看
+```
+$> get-executionpolicy
+Restricted
+```
+Restricted 执行策略不允许任何脚本运行。
+AllSigned 和 RemoteSigned 执行策略可防止 Windows PowerShell 运行没有数字签名的脚本。
+
+修改策略为使用管理员运行的powershell执行下面命令：
+```
+set-executionpolicy remotesigned
+```
+之后就能够正常执行环境准备脚本了
