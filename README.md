@@ -35,6 +35,7 @@ CoolQ C++ SDK 封装了跟 DLL 接口相关的底层逻辑，包括：
     - [安装依赖](#%e5%ae%89%e8%a3%85%e4%be%9d%e8%b5%96)
     - [固定依赖包版本](#%e5%9b%ba%e5%ae%9a%e4%be%9d%e8%b5%96%e5%8c%85%e7%89%88%e6%9c%ac)
     - [使用 CI 自动构建](#%e4%bd%bf%e7%94%a8-ci-%e8%87%aa%e5%8a%a8%e6%9e%84%e5%bb%ba)
+    - [分发应用](#%e5%88%86%e5%8f%91%e5%ba%94%e7%94%a8)
   - [插件生命周期](#%e6%8f%92%e4%bb%b6%e7%94%9f%e5%91%bd%e5%91%a8%e6%9c%9f)
   - [应用案例](#%e5%ba%94%e7%94%a8%e6%a1%88%e4%be%8b)
 
@@ -230,6 +231,10 @@ git checkout 7578a485b181ded330b87cc72726f01e38ff7ed6 -- ports
 在每次 Git 推送之后，CI 会自动运行构建脚本，并将构建出的 `app.dll` 和 `app.json` 打包进 `<app_id>.zip`，可在 AppVeyor 构建任务的「Artifacts」处下载。
 
 注意，目前无法直接打包成 CPK 格式，如需分发，仍需手动在 酷Q 应用目录中打包。
+
+### 分发应用
+
+如果需要向用户分发应用（打包好的 CPK），需要提示用户安装 Visual C++ 可再发行软件包，下载地址见 [最新支持的 Visual C++ 下载](https://support.microsoft.com/zh-cn/help/2977003/the-latest-supported-visual-c-downloads)。
 
 ## 插件生命周期
 
